@@ -36,7 +36,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 
 # Instala as dependências com PNPM
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --prod
 
 # Copia o restante dos arquivos da aplicação
 COPY . .
