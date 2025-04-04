@@ -1,0 +1,39 @@
+# Arquivos e diretórios do controle de versão
+.git
+.gitignore
+
+# Documentação
+README.md
+*.md
+
+# Dependências
+node_modules
+npm-debug.log
+pnpm-debug.log
+
+# Arquivos de ambiente
+.env
+.env.*
+
+# Diretório de saída de renderização
+renders/
+
+# Scripts de Docker
+*.sh
+
+# Arquivos de Docker
+.dockerignore
+
+# Logs
+logs
+*.log
+
+# Diretório de cache do sistema
+.npm
+.pnpm-store
+
+# Arquivos de IDE e editores
+.idea
+.vscode
+*.swp
+*.swo

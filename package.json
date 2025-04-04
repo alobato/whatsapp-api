@@ -1,0 +1,24 @@
+{
+  "name": "zap-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "",
+  "scripts": {
+    "dev": "nodemon --inspect --env-file=.env src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "tsup": "^8.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "whatsapp-web.js": "^1.27.0",
+    "qrcode": "^1.5.4"
+  }
+}
