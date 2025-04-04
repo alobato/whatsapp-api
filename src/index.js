@@ -1,3 +1,4 @@
+import path from "node:path";
 import express from "express";
 import { cors } from "./cors.js";
 import dotenv from "dotenv";
