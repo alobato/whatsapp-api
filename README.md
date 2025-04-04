@@ -21,6 +21,8 @@ A RESTful API service that enables programmatic access to WhatsApp Web functiona
 
 ## Installation
 
+### Standard Installation
+
 1. Clone the repository:
 ```bash
 git clone https://github.com/alobato/whatsapp-api.git
@@ -41,6 +43,93 @@ API_TOKEN=your_secure_token_here
 4. Start the server:
 ```bash
 npm start
+```
+
+### Docker Installation
+
+1. Create a new directory and clone the repository:
+```bash
+cd
+mkdir apps
+cd apps
+git clone https://github.com/alobato/whatsapp-api.git
+```
+
+2. Navigate to the project directory:
+```bash
+cd ~/apps/whatsapp-api
+```
+
+3. Build the Docker image:
+```bash
+sudo docker build -t whatsapp-api .
+```
+
+4. Create a `.env` file:
+```bash
+nano .env
+```
+
+Add the following configuration:
+```env
+PORT=3000
+NODE_ENV=production
+WEBHOOK_URL=https://api.yoursite.com/whatsapp-api
+API_TOKEN=your_secure_token_here
+```
+
+5. Create a Docker network:
+```bash
+sudo docker network create my-network
+```
+
+6. Run the Docker container:
+```bash
+sudo docker run -d \
+  --name my-whatsapp-api \
+  --network my-network \
+  -p 3000:3000 \
+  --env-file .env \
+  whatsapp-api
+```
+
+### Docker Commands Reference
+
+```bash
+# View container logs
+sudo docker logs my-whatsapp-api
+
+# Stop container
+sudo docker stop my-whatsapp-api
+
+# Start container
+sudo docker start my-whatsapp-api
+
+# Remove container
+sudo docker rm my-whatsapp-api
+
+# Remove image
+sudo docker rmi whatsapp-api
+```
+
+### Dockerfile
+
+The project includes a Dockerfile for containerization:
+
+```dockerfile
+FROM node:18-slim
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["node", "src/index.js"]
 ```
 
 ## API Endpoints
