@@ -18,7 +18,8 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
-    "whatsapp-web.js": "^1.27.0",
-    "qrcode": "^1.5.4"
+    "puppeteer": "^24.6.0",
+    "qrcode": "^1.5.4",
+    "whatsapp-web.js": "^1.27.0"
   }
 }
