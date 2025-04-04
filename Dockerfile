@@ -26,17 +26,14 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Instala o PNPM globalmente
-RUN npm install -g pnpm@latest
-
 # Diretório de trabalho
 WORKDIR /app
 
 # Copia os arquivos de configuração de dependências
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json ./
 
-# Instala as dependências com PNPM
-RUN pnpm install --prod
+# Instala as dependências com NPM
+RUN npm install
 
 # Copia o restante dos arquivos da aplicação
 COPY . .
