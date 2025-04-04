@@ -146,7 +146,187 @@ app.get("/health", (req, res) => {
   });
 });
 
+app.get("/qr", (req, res) => {
+
+  if (!qrCodeData) {
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WhatsApp QR Code</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+          }
+          .container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 90%;
+          }
+          h1 {
+            color: #128C7E;
+            margin-bottom: 20px;
+          }
+          .status {
+            margin: 20px 0;
+            font-size: 18px;
+            color: #333;
+          }
+          .refresh-btn {
+            background-color: #128C7E;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+          }
+          .refresh-btn:hover {
+            background-color: #0C6B5D;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>WhatsApp Connection</h1>
+          <div class="status">Status: ${connectionStatus}</div>
+          <p>No QR code is available. The client might be already connected or still initializing.</p>
+          <p>Please check the connection status and try again if needed.</p>
+          <button class="refresh-btn" onclick="location.reload()">Refresh</button>
+        </div>
+        <script>
+          // Auto refresh every 5 seconds if not connected
+          if ('${connectionStatus}' !== 'connected') {
+            setTimeout(() => {
+              location.reload();
+            }, 5000);
+          }
+        </script>
+      </body>
+      </html>
+    `;
+    return res.send(html);
+  }
+
+  // If QR code is available, generate QR code image
+  try {
+    // Generate QR code as data URL
+    qrcode.toDataURL(qrCodeData, (err, url) => {
+      if (err) {
+        console.error('Error generating QR code for HTML:', err);
+        return res.status(500).send('Error generating QR code');
+      }
+
+      // Create HTML with the QR code
+      const html = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta http-equiv="refresh" content="60"> <!-- Refresh page every 60 seconds -->
+          <title>WhatsApp QR Code</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              height: 100vh;
+              margin: 0;
+              background-color: #f5f5f5;
+            }
+            .container {
+              text-align: center;
+              background-color: white;
+              padding: 30px;
+              border-radius: 10px;
+              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+              max-width: 90%;
+            }
+            h1 {
+              color: #128C7E;
+              margin-bottom: 20px;
+            }
+            .qr-container {
+              margin: 20px 0;
+            }
+            .qr-code {
+              max-width: 300px;
+              width: 100%;
+              height: auto;
+            }
+            .instructions {
+              margin: 20px 0;
+              font-size: 16px;
+              color: #333;
+            }
+            .status {
+              margin: 10px 0;
+              font-size: 18px;
+              font-weight: bold;
+              color: #128C7E;
+            }
+            .timestamp {
+              color: #666;
+              font-size: 14px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>WhatsApp Connection QR Code</h1>
+            <div class="status">Status: ${connectionStatus}</div>
+            <div class="qr-container">
+              <img src="${url}" alt="WhatsApp QR Code" class="qr-code">
+            </div>
+            <div class="instructions">
+              <p>1. Open WhatsApp on your phone</p>
+              <p>2. Tap Menu or Settings and select WhatsApp Web</p>
+              <p>3. Point your phone to this screen to scan the QR code</p>
+            </div>
+            <div class="timestamp">
+              Generated at: ${new Date().toLocaleString()}
+            </div>
+          </div>
+          <script>
+            // Auto refresh every 20 seconds if not connected
+            if ('${connectionStatus}' !== 'connected') {
+              setTimeout(() => {
+                location.reload();
+              }, 20000);
+            }
+          </script>
+        </body>
+        </html>
+      `;
+
+      res.send(html);
+    });
+  } catch (error) {
+    console.error('Error in QR code HTML endpoint:', error);
+    res.status(500).send('Error generating QR code page');
+  }
+
+});
+
 // Connection status and QR code endpoint - requires authentication
+// curl -X GET \
+// 'http://localhost:3000/connection' \
+// -H 'authorization: Bearer your_api_token_here'
 app.get("/connection", authenticateToken, (req, res) => {
   // let qrCodeBase64 = null;
 
